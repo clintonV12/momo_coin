@@ -35,3 +35,5 @@ export 'home_page_alt_1/home_page_alt1_widget.dart' show HomePageAlt1Widget;
 export 'budget_d_e_l_e_t_e/budget_d_e_l_e_t_e_widget.dart'
     show BudgetDELETEWidget;
 export 'profilepage/profilepage_widget.dart' show ProfilepageWidget;
+export 'buy_ycoin/buy_ycoin.dart' show BuyWidget;
+export 'cashout_complete/cashout_complete.dart' show CashOutCompleteWidget;

@@ -1,23 +1,19 @@
 import '../flutter_flow/flutter_flow_animations.dart';
-import '../flutter_flow/flutter_flow_drop_down.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import '../transfer_complete/transfer_complete_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class TransferFundsWidget extends StatefulWidget {
-  const TransferFundsWidget({Key? key}) : super(key: key);
+class BuyWidget extends StatefulWidget {
+  const BuyWidget({Key? key}) : super(key: key);
 
   @override
-  _TransferFundsWidgetState createState() => _TransferFundsWidgetState();
+  _BuyWidgetState createState() => _BuyWidgetState();
 }
 
-class _TransferFundsWidgetState extends State<TransferFundsWidget>
-    with TickerProviderStateMixin {
+class _BuyWidgetState extends State<BuyWidget> with TickerProviderStateMixin {
   TextEditingController? textController;
 
   String? dropDownValue1;
@@ -206,7 +202,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                         children: [
                           Text(
                             FFLocalizations.of(context).getText(
-                              'pe3o18oh' /* Transfer Funds */,
+                              'Purchase Y-COIN',
                             ),
                             style: FlutterFlowTheme.of(context).title1,
                           ),
@@ -286,7 +282,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                                   children: [
                                     Text(
                                       FFLocalizations.of(context).getText(
-                                        'zq4ozx20' /* $7,630 */,
+                                        '7,630 YC <=> R7,630' /* $7,630 */,
                                       ),
                                       style: FlutterFlowTheme.of(context)
                                           .title1
@@ -310,7 +306,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                                   children: [
                                     Text(
                                       FFLocalizations.of(context).getText(
-                                        'qukh7yo1' /* **** 0149 */,
+                                        '*****' /* **** 0149 */,
                                       ),
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1
@@ -322,7 +318,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                                     ),
                                     Text(
                                       FFLocalizations.of(context).getText(
-                                        'n87hkr7d' /* 05/25 */,
+                                        '22/Sep/2022' /* 05/25 */,
                                       ),
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1
@@ -345,7 +341,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                           print('Button pressed ...');
                         },
                         text: FFLocalizations.of(context).getText(
-                          '3ct4fj7p' /* Change Account */,
+                          'Enter Amount' /* Change Account */,
                         ),
                         options: FFButtonOptions(
                           width: 150,
@@ -366,7 +362,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                           obscureText: false,
                           decoration: InputDecoration(
                             labelText: FFLocalizations.of(context).getText(
-                              'ynie0pc5' /* Wallet Address */,
+                              'Amount To Buy' /* Wallet Address */,
                             ),
                             labelStyle: FlutterFlowTheme.of(context)
                                 .title1
@@ -437,7 +433,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                           );
                         },
                         text: FFLocalizations.of(context).getText(
-                          'xaw2jdst' /* Send Transfer */,
+                          'Continue To Payment' /* Send Transfer */,
                         ),
                         options: FFButtonOptions(
                           width: 300,

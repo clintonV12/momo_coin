@@ -1,11 +1,10 @@
 import '../auth/auth_util.dart';
 import '../backend/backend.dart';
-import '../components/pause_card_widget.dart';
+import '../buy_ycoin/buy_ycoin.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../payment_details/payment_details_widget.dart';
-import '../transaction_a_d_d/transaction_a_d_d_widget.dart';
 import '../transfer_funds/transfer_funds_widget.dart';
 import '../request_funds/request_funds_widget.dart';
 import 'package:flutter/material.dart';
@@ -87,6 +86,7 @@ class _MYCardWidgetState extends State<MYCardWidget>
   @override
   void initState() {
     super.initState();
+
     startPageLoadAnimations(
       animationsMap.values
           .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
@@ -379,19 +379,15 @@ class _MYCardWidgetState extends State<MYCardWidget>
                             ),
                             child: InkWell(
                               onTap: () async {
-                                await showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return Padding(
-                                      padding:
-                                          MediaQuery.of(context).viewInsets,
-                                      child: Container(
-                                        height: 220,
-                                        child: PauseCardWidget(),
-                                      ),
-                                    );
-                                  },
+                                await Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.bottomToTop,
+                                    duration: Duration(milliseconds: 220),
+                                    reverseDuration:
+                                        Duration(milliseconds: 220),
+                                    child: BuyWidget(),
+                                  ),
                                 );
                               },
                               child: Column(

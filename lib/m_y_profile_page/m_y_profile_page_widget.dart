@@ -10,18 +10,14 @@ import '../login_page/login_page_widget.dart';
 import '../notifications_settings/notifications_settings_widget.dart';
 import '../privacy_policy/privacy_policy_widget.dart';
 import '../tutorial_p_r_o_f_i_l_e/tutorial_p_r_o_f_i_l_e_widget.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MYProfilePageWidget extends StatefulWidget {
   const MYProfilePageWidget({
     Key? key,
-    this.userProfile,
   }) : super(key: key);
-
-  final DocumentReference? userProfile;
 
   @override
   _MYProfilePageWidgetState createState() => _MYProfilePageWidgetState();
@@ -29,6 +25,16 @@ class MYProfilePageWidget extends StatefulWidget {
 
 class _MYProfilePageWidgetState extends State<MYProfilePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  getProfileUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username');
+  }
+
+  getProfileEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('email');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +171,7 @@ class _MYProfilePageWidgetState extends State<MYProfilePageWidget> {
                               Text(
                                 valueOrDefault<String>(
                                   mYProfilePageUsersRecord.displayName,
-                                  'Random user',
+                                  getProfileUsername(),
                                 ),
                                 style: FlutterFlowTheme.of(context)
                                     .title3
@@ -187,7 +193,7 @@ class _MYProfilePageWidgetState extends State<MYProfilePageWidget> {
                               child: Text(
                                 valueOrDefault<String>(
                                   mYProfilePageUsersRecord.userTitle,
-                                  'Badass Busybody',
+                                  getProfileEmail(),
                                 ),
                                 style: FlutterFlowTheme.of(context)
                                     .bodyText1

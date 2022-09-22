@@ -9,6 +9,7 @@ import '../home_page/home_page_widget.dart';
 import '../main.dart';
 import '../register_account/register_account_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart';
 import '../backend/ycoin_api/constants.dart';
@@ -37,6 +38,24 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     passwordLoginVisibility = false;
   }
 
+  void getAccessToken() async {
+    try {
+      Response response = await post(
+          Uri.parse(ApiConstants.baseUrl + ApiConstants.remTokenEndpoint),
+          body: {});
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body.toString());
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('remToken', data['access_token']);
+      } else {
+        print('failed');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   void login(String username, password) async {
     print(username.toString());
     print(password.toString());
@@ -47,6 +66,14 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('username', data['username']);
+        prefs.setString('phone', data['phone']);
+        prefs.setString('email', data['email']);
+        prefs.setString('wallet_address', data['wallet_address']);
+
+        getAccessToken();
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomePageWidget()),
