@@ -5,6 +5,7 @@ import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import '../transfer_complete/transfer_complete_widget.dart';
 import 'package:flutter/material.dart';
+import '../backend/ycoin_api/models/account.dart';
 
 class BuyWidget extends StatefulWidget {
   const BuyWidget({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class BuyWidget extends StatefulWidget {
 
 class _BuyWidgetState extends State<BuyWidget> with TickerProviderStateMixin {
   TextEditingController? textController;
+  late Future<Account> futureAccount;
 
   String? dropDownValue1;
   String? dropDownValue2;
@@ -154,6 +156,7 @@ class _BuyWidgetState extends State<BuyWidget> with TickerProviderStateMixin {
     );
 
     textController = TextEditingController();
+    futureAccount = fetchAccount(7867954);
   }
 
   @override
@@ -201,9 +204,7 @@ class _BuyWidgetState extends State<BuyWidget> with TickerProviderStateMixin {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            FFLocalizations.of(context).getText(
-                              'Purchase Y-COIN',
-                            ),
+                            'Buy Y-COIN',
                             style: FlutterFlowTheme.of(context).title1,
                           ),
                           Card(
@@ -260,9 +261,7 @@ class _BuyWidgetState extends State<BuyWidget> with TickerProviderStateMixin {
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Text(
-                                      FFLocalizations.of(context).getText(
-                                        'kyzwrfh4' /* Balance */,
-                                      ),
+                                      'Balance ',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1
                                           .override(
@@ -280,19 +279,32 @@ class _BuyWidgetState extends State<BuyWidget> with TickerProviderStateMixin {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    Text(
-                                      FFLocalizations.of(context).getText(
-                                        '7,630 YC <=> R7,630' /* $7,630 */,
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .title1
-                                          .override(
-                                            fontFamily: 'Lexend',
-                                            color: FlutterFlowTheme.of(context)
-                                                .textColor,
-                                            fontSize: 32,
-                                          ),
-                                    ),
+                                    FutureBuilder<Account>(
+                                      future: futureAccount,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Text(
+                                              snapshot.data!.y_balance
+                                                  .toString(),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .title1
+                                                      .override(
+                                                        fontFamily: 'Lexend',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .textColor,
+                                                        fontSize: 32,
+                                                      ));
+                                        } else if (snapshot.hasError) {
+                                          return Text('${snapshot.error}');
+                                        }
+
+                                        // By default, show a loading spinner.
+                                        return const CircularProgressIndicator();
+                                      },
+                                    )
                                   ],
                                 ),
                               ),
@@ -305,9 +317,7 @@ class _BuyWidgetState extends State<BuyWidget> with TickerProviderStateMixin {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      FFLocalizations.of(context).getText(
-                                        '*****' /* **** 0149 */,
-                                      ),
+                                      '*****' /* **** 0149 */,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1
                                           .override(
@@ -317,9 +327,7 @@ class _BuyWidgetState extends State<BuyWidget> with TickerProviderStateMixin {
                                           ),
                                     ),
                                     Text(
-                                      FFLocalizations.of(context).getText(
-                                        '22/Sep/2022' /* 05/25 */,
-                                      ),
+                                      '22/Oct/2022' /* 05/25 */,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1
                                           .override(
@@ -340,9 +348,7 @@ class _BuyWidgetState extends State<BuyWidget> with TickerProviderStateMixin {
                         onPressed: () {
                           print('Button pressed ...');
                         },
-                        text: FFLocalizations.of(context).getText(
-                          'Enter Amount' /* Change Account */,
-                        ),
+                        text: 'Enter Amount' /* Change Account */,
                         options: FFButtonOptions(
                           width: 150,
                           height: 40,
@@ -361,9 +367,7 @@ class _BuyWidgetState extends State<BuyWidget> with TickerProviderStateMixin {
                           controller: textController,
                           obscureText: false,
                           decoration: InputDecoration(
-                            labelText: FFLocalizations.of(context).getText(
-                              'Amount To Buy' /* Wallet Address */,
-                            ),
+                            labelText: 'Amount To Buy' /* Wallet Address */,
                             labelStyle: FlutterFlowTheme.of(context)
                                 .title1
                                 .override(
@@ -432,9 +436,7 @@ class _BuyWidgetState extends State<BuyWidget> with TickerProviderStateMixin {
                             ),
                           );
                         },
-                        text: FFLocalizations.of(context).getText(
-                          'Continue To Payment' /* Send Transfer */,
-                        ),
+                        text: 'Continue To Payments' /* Send Transfer */,
                         options: FFButtonOptions(
                           width: 300,
                           height: 70,
@@ -459,9 +461,7 @@ class _BuyWidgetState extends State<BuyWidget> with TickerProviderStateMixin {
               ).animated([animationsMap['rowOnPageLoadAnimation2']!]),
             ),
             Text(
-              FFLocalizations.of(context).getText(
-                'xku4zxbe' /* Tap above to complete transfer */,
-              ),
+              'Tap above to complete transfer',
               style: FlutterFlowTheme.of(context).bodyText1.override(
                     fontFamily: 'Lexend',
                     color: Color(0x43000000),

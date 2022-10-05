@@ -108,9 +108,7 @@ class _HomePageAltWidgetState extends State<HomePageAltWidget> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       4, 0, 0, 0),
                                   child: Text(
-                                    FFLocalizations.of(context).getText(
-                                      'v74pa882' /* Andrew */,
-                                    ),
+                                    'Clinton',
                                     style: FlutterFlowTheme.of(context)
                                         .title3
                                         .override(
@@ -126,9 +124,7 @@ class _HomePageAltWidgetState extends State<HomePageAltWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                               child: Text(
-                                FFLocalizations.of(context).getText(
-                                  'rzpg3cvh' /* Your latest updates are below. */,
-                                ),
+                                'Your latest updates are below.',
                                 style: FlutterFlowTheme.of(context).bodyText1,
                               ),
                             ),
@@ -187,9 +183,7 @@ class _HomePageAltWidgetState extends State<HomePageAltWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         12, 4, 0, 0),
                                     child: Text(
-                                      FFLocalizations.of(context).getText(
-                                        'g07h0azf' /* $25,281 */,
-                                      ),
+                                      '700 YC' /* $25,281 */,
                                       style: FlutterFlowTheme.of(context)
                                           .title1
                                           .override(
@@ -218,9 +212,7 @@ class _HomePageAltWidgetState extends State<HomePageAltWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         12, 4, 0, 0),
                                     child: Text(
-                                      FFLocalizations.of(context).getText(
-                                        '7vf40ybo' /* $25,281 */,
-                                      ),
+                                      '700 YC' /* $25,281 */,
                                       style: FlutterFlowTheme.of(context)
                                           .title1
                                           .override(
@@ -251,7 +243,7 @@ class _HomePageAltWidgetState extends State<HomePageAltWidget> {
                                         12, 4, 0, 0),
                                     child: Text(
                                       FFLocalizations.of(context).getText(
-                                        'cvrbfozm' /* $25,281 */,
+                                        '700 YC',
                                       ),
                                       style: FlutterFlowTheme.of(context)
                                           .title1

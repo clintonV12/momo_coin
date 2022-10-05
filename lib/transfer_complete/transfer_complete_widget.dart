@@ -3,6 +3,7 @@ import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import '../main.dart';
 import 'package:flutter/material.dart';
+import 'package:momo_coin/m_y_card/m_y_card_widget.dart';
 
 class TransferCompleteWidget extends StatefulWidget {
   const TransferCompleteWidget({Key? key}) : super(key: key);
@@ -74,14 +75,9 @@ class _TransferCompleteWidgetState extends State<TransferCompleteWidget> {
               padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 70),
               child: FFButtonWidget(
                 onPressed: () async {
-                  await Navigator.push(
+                  Navigator.push(
                     context,
-                    PageTransition(
-                      type: PageTransitionType.leftToRight,
-                      duration: Duration(milliseconds: 200),
-                      reverseDuration: Duration(milliseconds: 200),
-                      child: NavBarPage(initialPage: 'MY_Card'),
-                    ),
+                    MaterialPageRoute(builder: (context) => MYCardWidget()),
                   );
                 },
                 text: FFLocalizations.of(context).getText(

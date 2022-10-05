@@ -1,5 +1,6 @@
 import '../auth/auth_util.dart';
 import '../backend/backend.dart';
+import '../backend/ycoin_api/models/account.dart';
 import '../buy_ycoin/buy_ycoin.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -9,6 +10,9 @@ import '../transfer_funds/transfer_funds_widget.dart';
 import '../request_funds/request_funds_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../backend/ycoin_api/constants.dart';
 
 class MYCardWidget extends StatefulWidget {
   const MYCardWidget({Key? key}) : super(key: key);
@@ -83,6 +87,40 @@ class _MYCardWidgetState extends State<MYCardWidget>
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  late String username = '';
+  late String phone = '';
+  late String yBalance = '';
+  late Future<Account> futureAccount;
+
+  void getStoredValue() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey('username')) {
+      username = prefs.getString('username')!;
+      phone = prefs.getString('phone')!;
+    }
+  }
+
+  void getYcoinBalance() async {
+    print(phone);
+    try {
+      Response response = await get(
+        Uri.parse(
+            ApiConstants.baseUrl + ApiConstants.userAccountEndpoint + phone),
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body.toString());
+        yBalance = data['y_balance'];
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('Y-CoinBalance', data['y_balance'].toString());
+      } else {
+        print('failed');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -92,6 +130,9 @@ class _MYCardWidgetState extends State<MYCardWidget>
           .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
       this,
     );
+    getStoredValue();
+    getYcoinBalance();
+    futureAccount = fetchAccount(7867954);
   }
 
   @override
@@ -151,9 +192,7 @@ class _MYCardWidgetState extends State<MYCardWidget>
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Text(
-                                  FFLocalizations.of(context).getText(
-                                    '6t7n9ugd' /* Balance */,
-                                  ),
+                                  "Balance in Rands",
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
                                       .override(
@@ -171,19 +210,29 @@ class _MYCardWidgetState extends State<MYCardWidget>
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
-                                Text(
-                                  FFLocalizations.of(context).getText(
-                                    'h3086ma4' /* $7,630 */,
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .title1
-                                      .override(
-                                        fontFamily: 'Lexend',
-                                        color: FlutterFlowTheme.of(context)
-                                            .textColor,
-                                        fontSize: 32,
-                                      ),
-                                ),
+                                FutureBuilder<Account>(
+                                  future: futureAccount,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text(
+                                          snapshot.data!.y_balance.toString(),
+                                          style: FlutterFlowTheme.of(context)
+                                              .title1
+                                              .override(
+                                                fontFamily: 'Lexend',
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .textColor,
+                                                fontSize: 32,
+                                              ));
+                                    } else if (snapshot.hasError) {
+                                      return Text('${snapshot.error}');
+                                    }
+
+                                    // By default, show a loading spinner.
+                                    return const CircularProgressIndicator();
+                                  },
+                                )
                               ],
                             ),
                           ),
@@ -195,9 +244,7 @@ class _MYCardWidgetState extends State<MYCardWidget>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  FFLocalizations.of(context).getText(
-                                    'lr97k2rc' /* **** 0149 */,
-                                  ),
+                                  "******",
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
                                       .override(
@@ -207,9 +254,7 @@ class _MYCardWidgetState extends State<MYCardWidget>
                                       ),
                                 ),
                                 Text(
-                                  FFLocalizations.of(context).getText(
-                                    'l9racj60' /* 05/25 */,
-                                  ),
+                                  "05/Oct/2022",
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
                                       .override(
@@ -263,23 +308,32 @@ class _MYCardWidgetState extends State<MYCardWidget>
                                 style: FlutterFlowTheme.of(context).bodyText2,
                               ),
                               Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
-                                child: Text(
-                                  FFLocalizations.of(context).getText(
-                                    'axrvkhrv' /* +$12,402 */,
-                                  ),
-                                  textAlign: TextAlign.start,
-                                  style: FlutterFlowTheme.of(context)
-                                      .title1
-                                      .override(
-                                        fontFamily: 'Lexend',
-                                        color: FlutterFlowTheme.of(context)
-                                            .tertiaryColor,
-                                        fontSize: 32,
-                                      ),
-                                ),
-                              ),
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 8, 0, 12),
+                                  child: FutureBuilder<Account>(
+                                    future: futureAccount,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return Text(
+                                            snapshot.data!.y_balance.toString(),
+                                            textAlign: TextAlign.start,
+                                            style: FlutterFlowTheme.of(context)
+                                                .title1
+                                                .override(
+                                                  fontFamily: 'Lexend',
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .tertiaryColor,
+                                                  fontSize: 32,
+                                                ));
+                                      } else if (snapshot.hasError) {
+                                        return Text('${snapshot.error}');
+                                      }
+
+                                      // By default, show a loading spinner.
+                                      return const CircularProgressIndicator();
+                                    },
+                                  )),
                             ])),
                           ],
                         ),
@@ -495,7 +549,7 @@ class _MYCardWidgetState extends State<MYCardWidget>
                               child: SizedBox(
                                 width: 40,
                                 height: 40,
-                                child: SpinKitPumpingHeart(
+                                child: SpinKitCubeGrid(
                                   color:
                                       FlutterFlowTheme.of(context).primaryColor,
                                   size: 40,
@@ -518,7 +572,7 @@ class _MYCardWidgetState extends State<MYCardWidget>
                           }
                           return Column(
                             mainAxisSize: MainAxisSize.max,
-                            children: List.generate(
+                            /*children: List.generate(
                                 transactionListTransactionsRecordList.length,
                                 (transactionListIndex) {
                               final transactionListTransactionsRecord =
@@ -671,7 +725,7 @@ class _MYCardWidgetState extends State<MYCardWidget>
                                   ),
                                 ),
                               );
-                            }),
+                            }),*/
                           );
                         },
                       ),

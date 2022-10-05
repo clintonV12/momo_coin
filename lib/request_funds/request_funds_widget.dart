@@ -11,6 +11,8 @@ import '../flutter_flow/flutter_flow_widgets.dart';
 import '../transfer_complete/transfer_complete_widget.dart';
 import 'package:flutter/material.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import '../backend/ycoin_api/models/account.dart';
 
 class RequestFundsWidget extends StatefulWidget {
   const RequestFundsWidget({Key? key}) : super(key: key);
@@ -22,6 +24,7 @@ class RequestFundsWidget extends StatefulWidget {
 class _RequestFundsWidgetState extends State<RequestFundsWidget>
     with TickerProviderStateMixin {
   TextEditingController? textController;
+  late Future<Account> futureAccount;
 
   String? dropDownValue1;
   String? dropDownValue2;
@@ -151,6 +154,20 @@ class _RequestFundsWidgetState extends State<RequestFundsWidget>
     ),
   };
 
+  void showAllert(String msg1, String msg2) {
+    AlertDialog(
+      title: const Text('Result'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: const <Widget>[
+            Text(''),
+            Text(''),
+          ],
+        ),
+      ),
+    );
+  }
+
   void requestTransfer(String username, password) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -194,6 +211,7 @@ class _RequestFundsWidgetState extends State<RequestFundsWidget>
     );
 
     textController = TextEditingController();
+    futureAccount = fetchAccount(7867954);
   }
 
   @override
@@ -318,16 +336,34 @@ class _RequestFundsWidgetState extends State<RequestFundsWidget>
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    Text(
-                                      '700 YC <=> R700' /* $7,630 */,
-                                      style: FlutterFlowTheme.of(context)
-                                          .title1
-                                          .override(
-                                            fontFamily: 'Lexend',
-                                            color: FlutterFlowTheme.of(context)
-                                                .textColor,
-                                            fontSize: 32,
-                                          ),
+                                    FutureBuilder<Account>(
+                                      future: futureAccount,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Text(
+                                              snapshot.data!.y_balance
+                                                      .toString() +
+                                                  " == R" +
+                                                  snapshot.data!.y_balance
+                                                      .toString(),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .title1
+                                                      .override(
+                                                        fontFamily: 'Lexend',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .textColor,
+                                                        fontSize: 32,
+                                                      ));
+                                        } else if (snapshot.hasError) {
+                                          return Text('${snapshot.error}');
+                                        }
+
+                                        // By default, show a loading spinner.
+                                        return const CircularProgressIndicator();
+                                      },
                                     ),
                                   ],
                                 ),
@@ -351,7 +387,7 @@ class _RequestFundsWidgetState extends State<RequestFundsWidget>
                                           ),
                                     ),
                                     Text(
-                                      '22/Sep/2022' /* 05/25 */,
+                                      '22/Oct/2022' /* 05/25 */,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1
                                           .override(

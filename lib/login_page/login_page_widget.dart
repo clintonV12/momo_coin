@@ -1,3 +1,6 @@
+import 'package:momo_coin/home_page_alt/home_page_alt_widget.dart';
+import 'package:momo_coin/m_y_card/m_y_card_widget.dart';
+
 import '../auth/auth_util.dart';
 import '../backend/backend.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -47,7 +50,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('remToken', data['access_token']);
+        prefs.setString('remToken', data['access_token'].toString());
       } else {
         print('failed');
       }
@@ -66,17 +69,18 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
+        //print(data['username']!.toString());
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('username', data['username']);
-        prefs.setString('phone', data['phone']);
-        prefs.setString('email', data['email']);
-        prefs.setString('wallet_address', data['wallet_address']);
+        prefs.setString('username', data['username'].toString());
+        prefs.setString('phone', data['phone'].toString());
+        prefs.setString('email', data['email'].toString());
+        prefs.setString('wallet_address', data['wallet_address'].toString());
 
         getAccessToken();
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePageWidget()),
+          MaterialPageRoute(builder: (context) => MYCardWidget()),
         );
       } else {
         print('failed');
@@ -467,28 +471,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
                             child: FFButtonWidget(
-                              onPressed: () async {
-                                final user = await signInAnonymously(context);
-                                if (user == null) {
-                                  return;
-                                }
-
-                                final budgetListCreateData =
-                                    createBudgetListRecordData(
-                                  budgetUser: currentUserReference,
-                                );
-                                await BudgetListRecord.collection
-                                    .doc()
-                                    .set(budgetListCreateData);
-                                await Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        NavBarPage(initialPage: 'MY_Card'),
-                                  ),
-                                  (r) => false,
-                                );
-                              },
+                              onPressed: () async {},
                               text: FFLocalizations.of(context).getText(
                                 '1zqiw31h' /* Continue as Guest */,
                               ),

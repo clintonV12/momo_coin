@@ -1,3 +1,7 @@
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../backend/ycoin_api/constants.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -46,6 +50,39 @@ class _HomePageAlt1WidgetState extends State<HomePageAlt1Widget>
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  late String username = '';
+  late String phone = '';
+  late String yBalance = '';
+
+  void getStoredValue() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey('username')) {
+      username = prefs.getString('username')!;
+      phone = prefs.getString('phone')!;
+    }
+  }
+
+  void getYcoinBalance() async {
+    try {
+      Response response = await get(
+        Uri.parse(ApiConstants.baseUrl +
+            ApiConstants.userAccountEndpoint +
+            phone.toString()),
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body.toString());
+        yBalance = data['y_balance'];
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('Y-CoinBalance', data['y_balance'].toString());
+      } else {
+        print('failed');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +91,8 @@ class _HomePageAlt1WidgetState extends State<HomePageAlt1Widget>
           .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
       this,
     );
+    getStoredValue();
+    getYcoinBalance();
   }
 
   @override
@@ -130,9 +169,7 @@ class _HomePageAlt1WidgetState extends State<HomePageAlt1Widget>
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                               child: Text(
-                                FFLocalizations.of(context).getText(
-                                  'izgc0c6r' /* Andrew */,
-                                ),
+                                username,
                                 style: FlutterFlowTheme.of(context)
                                     .title3
                                     .override(
@@ -194,9 +231,7 @@ class _HomePageAlt1WidgetState extends State<HomePageAlt1Widget>
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                FFLocalizations.of(context).getText(
-                                  'wknu2tm4' /* Balance */,
-                                ),
+                                "Y-COIN Balance",
                                 style: FlutterFlowTheme.of(context)
                                     .bodyText1
                                     .override(
@@ -214,9 +249,7 @@ class _HomePageAlt1WidgetState extends State<HomePageAlt1Widget>
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                FFLocalizations.of(context).getText(
-                                  'syy689nt' /* $7,630 */,
-                                ),
+                                yBalance,
                                 style: FlutterFlowTheme.of(context)
                                     .title1
                                     .override(

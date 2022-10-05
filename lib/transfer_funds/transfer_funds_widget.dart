@@ -1,13 +1,15 @@
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../backend/ycoin_api/constants.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
-import '../flutter_flow/flutter_flow_drop_down.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import '../transfer_complete/transfer_complete_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../backend/ycoin_api/models/account.dart';
 
 class TransferFundsWidget extends StatefulWidget {
   const TransferFundsWidget({Key? key}) : super(key: key);
@@ -18,7 +20,11 @@ class TransferFundsWidget extends StatefulWidget {
 
 class _TransferFundsWidgetState extends State<TransferFundsWidget>
     with TickerProviderStateMixin {
-  TextEditingController? textController;
+  TextEditingController? textControllerPhone;
+  TextEditingController? textControllerAmount;
+
+  late String phone = '';
+  late Future<Account> futureAccount;
 
   String? dropDownValue1;
   String? dropDownValue2;
@@ -148,6 +154,34 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
     ),
   };
 
+  void getStoredValue() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey('phone')) {
+      phone = prefs.getString('phone')!;
+    }
+  }
+
+  void doTransferRequest(rPhone, amount) async {
+    try {
+      Response response = await post(
+          Uri.parse(ApiConstants.baseUrl + ApiConstants.loginEndpoint),
+          body: {
+            'senderPhone': 78679654,
+            'receiverPhone': rPhone,
+            "amount": amount
+          });
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body.toString());
+        print(data.toString());
+      } else {
+        print('failed');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -157,7 +191,10 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
       this,
     );
 
-    textController = TextEditingController();
+    textControllerPhone = TextEditingController();
+    textControllerAmount = TextEditingController();
+    getStoredValue();
+    futureAccount = fetchAccount(7867954);
   }
 
   @override
@@ -280,23 +317,36 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                               ),
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    20, 4, 20, 0),
+                                    20, 8, 20, 0),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    Text(
-                                      FFLocalizations.of(context).getText(
-                                        'zq4ozx20' /* $7,630 */,
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .title1
-                                          .override(
-                                            fontFamily: 'Lexend',
-                                            color: FlutterFlowTheme.of(context)
-                                                .textColor,
-                                            fontSize: 32,
-                                          ),
-                                    ),
+                                    FutureBuilder<Account>(
+                                      future: futureAccount,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Text(
+                                              snapshot.data!.y_balance
+                                                  .toString(),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .title1
+                                                      .override(
+                                                        fontFamily: 'Lexend',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .textColor,
+                                                        fontSize: 32,
+                                                      ));
+                                        } else if (snapshot.hasError) {
+                                          return Text('${snapshot.error}');
+                                        }
+
+                                        // By default, show a loading spinner.
+                                        return const CircularProgressIndicator();
+                                      },
+                                    )
                                   ],
                                 ),
                               ),
@@ -309,9 +359,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      FFLocalizations.of(context).getText(
-                                        'qukh7yo1' /* **** 0149 */,
-                                      ),
+                                      "******",
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1
                                           .override(
@@ -321,9 +369,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                                           ),
                                     ),
                                     Text(
-                                      FFLocalizations.of(context).getText(
-                                        'n87hkr7d' /* 05/25 */,
-                                      ),
+                                      "5 Oct 2022",
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1
                                           .override(
@@ -340,34 +386,17 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                         ).animated(
                             [animationsMap['containerOnPageLoadAnimation']!]),
                       ),
-                      FFButtonWidget(
-                        onPressed: () {
-                          print('Button pressed ...');
-                        },
-                        text: FFLocalizations.of(context).getText(
-                          '3ct4fj7p' /* Change Account */,
-                        ),
-                        options: FFButtonOptions(
-                          width: 150,
-                          height: 40,
-                          color: FlutterFlowTheme.of(context).primaryBackground,
-                          textStyle: FlutterFlowTheme.of(context).bodyText2,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                      Text(
+                        "Enter transfer details",
+                        style: TextStyle(fontSize: 18),
                       ).animated([animationsMap['buttonOnPageLoadAnimation']!]),
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 40, 0, 0),
                         child: TextFormField(
-                          controller: textController,
+                          controller: textControllerPhone,
                           obscureText: false,
                           decoration: InputDecoration(
-                            labelText: FFLocalizations.of(context).getText(
-                              'ynie0pc5' /* Wallet Address */,
-                            ),
+                            labelText: "Phone number",
                             labelStyle: FlutterFlowTheme.of(context)
                                 .title1
                                 .override(
@@ -407,8 +436,55 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                                 EdgeInsetsDirectional.fromSTEB(20, 24, 24, 24),
                           ),
                           style: FlutterFlowTheme.of(context).title1,
-                        ).animated(
-                            [animationsMap['textFieldOnPageLoadAnimation']!]),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 40, 0, 0),
+                        child: TextFormField(
+                          controller: textControllerAmount,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            labelText: "Y-COIN Amount",
+                            labelStyle: FlutterFlowTheme.of(context)
+                                .title1
+                                .override(
+                                  fontFamily: 'Lexend',
+                                  color: FlutterFlowTheme.of(context).grayLight,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: FlutterFlowTheme.of(context).alternate,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: FlutterFlowTheme.of(context).alternate,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0x00000000),
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0x00000000),
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            contentPadding:
+                                EdgeInsetsDirectional.fromSTEB(20, 24, 24, 24),
+                          ),
+                          style: FlutterFlowTheme.of(context).title1,
+                        ),
                       ),
                     ],
                   ),
@@ -426,6 +502,10 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                     children: [
                       FFButtonWidget(
                         onPressed: () async {
+                          doTransferRequest(
+                              textControllerPhone!.text.toString(),
+                              textControllerAmount!.text.toString());
+
                           await Navigator.push(
                             context,
                             PageTransition(
@@ -436,9 +516,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                             ),
                           );
                         },
-                        text: FFLocalizations.of(context).getText(
-                          'xaw2jdst' /* Send Transfer */,
-                        ),
+                        text: "Complete Transfer",
                         options: FFButtonOptions(
                           width: 300,
                           height: 70,
@@ -460,7 +538,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                     ],
                   ),
                 ],
-              ).animated([animationsMap['rowOnPageLoadAnimation2']!]),
+              ),
             ),
             Text(
               FFLocalizations.of(context).getText(
@@ -470,7 +548,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget>
                     fontFamily: 'Lexend',
                     color: Color(0x43000000),
                   ),
-            ).animated([animationsMap['textOnPageLoadAnimation']!]),
+            ),
           ],
         ),
       ),

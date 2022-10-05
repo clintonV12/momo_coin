@@ -171,7 +171,7 @@ class _MYProfilePageWidgetState extends State<MYProfilePageWidget> {
                               Text(
                                 valueOrDefault<String>(
                                   mYProfilePageUsersRecord.displayName,
-                                  getProfileUsername(),
+                                  getProfileUsername().toString(),
                                 ),
                                 style: FlutterFlowTheme.of(context)
                                     .title3
@@ -193,7 +193,7 @@ class _MYProfilePageWidgetState extends State<MYProfilePageWidget> {
                               child: Text(
                                 valueOrDefault<String>(
                                   mYProfilePageUsersRecord.userTitle,
-                                  getProfileEmail(),
+                                  getProfileEmail().toString(),
                                 ),
                                 style: FlutterFlowTheme.of(context)
                                     .bodyText1
